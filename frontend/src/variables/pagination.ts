@@ -1,0 +1,1 @@
+export const SIDEBAR_OPTIONS_LIMIT = 10;

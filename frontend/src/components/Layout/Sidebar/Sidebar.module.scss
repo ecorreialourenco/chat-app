@@ -1,0 +1,14 @@
+div.sidebar {
+  width: 150px;
+}
+
+.sidebar > div {
+  z-index: 1 !important;
+  width: 150px;
+  height: calc(100vh - 15px);
+  overflow-y: scroll;
+}
+
+.newMessage > span {
+  font-weight: bold;
+}

@@ -1,0 +1,44 @@
+.container {
+  position: relative;
+  height: calc(100% - 84px);
+}
+
+.messagesList {
+  width: 100%;
+  position: relative;
+  height: calc(100% - 70px);
+  overflow-y: scroll;
+}
+
+.listItem {
+  display: flex;
+  justify-content: left;
+}
+
+.listOwnItem {
+  display: flex;
+  justify-content: end;
+}
+
+.message {
+  width: 40%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+.messageSent {
+  background-color: lightgreen;
+}
+
+.messageReceived {
+  background-color: lightblue;
+}
+
+.inputContainer {
+  display: flex;
+}
+
+button.inputButton {
+  margin: 16px 0 8px;
+}

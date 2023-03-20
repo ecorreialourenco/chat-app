@@ -1,0 +1,18 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+}
+
+.mainContainer {
+  width: calc(100vw - 20px);
+  height: calc(100vh - 64px - 20px);
+  margin-top: 64px;
+  padding: 10px;
+}
+
+.withSidebar {
+  width: calc(100vw - 20px - 150px);
+}
