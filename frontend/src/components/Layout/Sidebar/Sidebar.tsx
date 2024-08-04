@@ -6,8 +6,6 @@ import {
   ListItemText,
   Toolbar,
 } from "@mui/material";
-import { Chat } from "../../../models";
-import { StatusEnum } from "../../../enum/status.enum";
 import cn from "classnames";
 import styles from "./Sidebar.module.scss";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
@@ -17,10 +15,10 @@ import { RootState } from "../../../store/store";
 import { setChatPage, setToggleFormStatus } from "../../../store/slices/ui";
 
 interface SidebarProps {
-  value: string | null;
-  options: Chat[];
-  onSelect: (value: Chat) => void;
-  userId: string;
+  value: number | null;
+  options: any[];
+  onSelect: (value: any) => void;
+  userId: number;
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -40,10 +38,8 @@ export const Sidebar: FC<SidebarProps> = ({
       className={styles.sidebar}
     >
       <Toolbar />
-      {options.map((item: Chat, idx: number) => {
-        const isRead = item.messages
-          .filter((message) => message.sentTo?.id === userId)
-          .every((message) => message.status === StatusEnum.READ);
+      {options.map((item: any, idx: number) => {
+        const isRead = true
 
         return (
           <ListItem key={idx} disablePadding onClick={() => onSelect(item)}>

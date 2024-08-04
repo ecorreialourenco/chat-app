@@ -8,22 +8,32 @@ import { AlertMessage } from "../../../components/form/AlertMessage/AlertMessage
 import { LOGIN } from "../../../queries/login";
 import { setToken } from "../../../store/slices/auth";
 import styles from "./Login.module.scss";
+import { LoginModel } from "../../../models";
+
+const initialData: LoginModel = {
+  username: "",
+  password: "",
+};
 
 export const Login: FC = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [formData, setFormData] = useState<LoginModel>(initialData);
   const [error, setError] = useState<string>("");
   const [login, { data, loading }] = useLazyQuery(LOGIN);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleChange = ({
+    target: { name, value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    if (!username.length || !password.length) {
+    if (!formData.username.length || !formData.password.length) {
       setError("Username and password are required");
-    } else if (username && password) {
-      login({ variables: { username, password } });
+    } else if (formData.username && formData.password) {
+      login({ variables: formData });
     }
   };
 
@@ -45,14 +55,16 @@ export const Login: FC = () => {
         <h1>Login</h1>
         <Input
           label="Username"
+          name="username"
           required
-          value={username}
-          onChange={(val: string) => setUsername(val)}
+          value={formData.username}
+          onChange={handleChange}
         />
         <InputPassword
-          value={password}
+          value={formData.password}
           label="Password"
-          onChange={(value: string) => setPassword(value)}
+          name="password"
+          onChange={handleChange}
           required={true}
         />
         <div className={styles.buttonContainer}>

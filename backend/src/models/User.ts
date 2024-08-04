@@ -1,53 +1,57 @@
-import moongose from "mongoose";
-import { MessagesDocs } from "./Messages";
+"use strict";
+import { Model } from "sequelize";
 
-interface UserAttrs {
-  username: string;
-  password: string;
-  messages: Array<MessagesDocs>;
-}
+const Users = (sequelize: any, DataTypes: any) => {
+  class Users extends Model {
+    static associate(models: any) {
+      Users.hasMany(models.Friends, { foreignKey: "requestId" });
+      Users.hasMany(models.Friends, { foreignKey: "targetId" });
 
-export interface UserDocs extends moongose.Document {
-  username: string;
-  password: string;
-  messages: Array<MessagesDocs>;
-}
-
-interface UserModel extends moongose.Model<UserDocs> {
-  build(attrs: UserAttrs): UserDocs;
-}
-
-const userSchema = new moongose.Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    messages: [
-      {
-        type: moongose.Schema.Types.ObjectId,
-        ref: "Messages",
-      },
-    ],
-  },
-  {
-    toJSON: {
-      transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-      },
-    },
+      Users.hasMany(models.GroupUsers);
+      Users.hasMany(models.Messages);
+      Users.hasMany(models.MessageUsers);
+    }
   }
-);
-
-userSchema.statics.build = (attrs: UserAttrs) => {
-  return new User(attrs);
+  Users.init(
+    {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          name: "username",
+          msg: "Username already in use!",
+        },
+        validate: {
+          notEmpty: {
+            msg: "This field is required!",
+          },
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "This field is required!",
+          },
+        },
+      },
+      isVisible: DataTypes.BOOLEAN,
+    },
+    {
+      sequelize,
+      paranoid: true,
+      underscored: true,
+      modelName: "Users",
+    }
+  );
+  return Users;
 };
 
-const User = moongose.model<UserDocs, UserModel>("User", userSchema);
-
-export { User };
+export default Users;

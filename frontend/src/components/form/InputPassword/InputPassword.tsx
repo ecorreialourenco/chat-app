@@ -14,7 +14,7 @@ interface InputPasswordProps {
   value: string;
   name?: string;
   label: string;
-  onChange: (value: string, name?: string) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
 }
 
@@ -52,9 +52,7 @@ export const InputPassword: FC<InputPasswordProps> = ({
         label={label}
         value={value}
         required={required}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onChange(e.target.value, e.target.name)
-        }
+        onChange={onChange}
       />
     </FormControl>
   );

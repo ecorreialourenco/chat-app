@@ -9,24 +9,34 @@ import { InputPassword } from "../../../components/form/InputPassword/InputPassw
 import { SIGNUP } from "../../../queries/signup";
 import { setToken } from "../../../store/slices/auth";
 import styles from "./Signup.module.scss";
+import { SignupModel } from "../../../models";
+
+const initialData: SignupModel = {
+  username: "",
+  password: "",
+  password2: "",
+};
 
 export const Signup: FC = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [password2, setPassword2] = useState<string>("");
+  const [formData, setFormData] = useState<SignupModel>(initialData);
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [signup, { data, loading }] = useMutation(SIGNUP);
 
+  const handleChange = ({
+    target: { name, value },
+  }: React.ChangeEvent<HTMLInputElement>) =>
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    if (password !== password2) {
+    if (formData.password !== formData.password2) {
       setError("Passwords don't match");
     } else {
-      signup({ variables: { username, password } });
+      signup({ variables: formData });
     }
   };
 
@@ -46,24 +56,43 @@ export const Signup: FC = () => {
         <h1>Signup</h1>
         <Input
           label="Username"
-          value={username}
-          onChange={(value: string) => setUsername(value)}
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
           required={true}
         />
-        <InputPassword
-          label="Password"
-          name="password"
-          value={password}
-          onChange={(value: string) => setPassword(value)}
-          required={true}
-        />
-        <InputPassword
-          label="Password"
-          name="password2"
-          value={password2}
-          onChange={(value: string) => setPassword2(value)}
-          required={true}
-        />
+        {/*  <div style={{ display: "flex" }}>
+          <Input
+            label="First Name"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required={true}
+          />
+          <Input
+            label="Last Name"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            required={true}
+          />
+        </div> */}
+        <div style={{ display: "flex" }}>
+          <InputPassword
+            label="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required={true}
+          />
+          <InputPassword
+            label="Password"
+            name="password2"
+            value={formData.password2}
+            onChange={handleChange}
+            required={true}
+          />
+        </div>
         <div className={styles.buttonContainer}>
           <Button variant="outlined" type="submit">
             Submit

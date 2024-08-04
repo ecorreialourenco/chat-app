@@ -1,28 +1,50 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { HeaderItem } from "../../../models";
-import { setToken } from "../../../store/slices/auth";
-import { setChatMessages, setSelectedChat } from "../../../store/slices/ui";
+import { logout } from "../../../store/slices/auth";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styles from "./Header.module.scss";
 
 interface HeaderProps {
   items: HeaderItem[];
-  userId?: string;
+  userId?: number | null;
 }
 
 export const Header: FC<HeaderProps> = ({ items, userId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    dispatch(setToken(""));
-    dispatch(setSelectedChat(null));
-    dispatch(setChatMessages([]));
+    dispatch(logout());
     navigate("/");
+    handleClose();
+  };
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleRedirect = (url: string) => {
+    navigate(url);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -39,18 +61,22 @@ export const Header: FC<HeaderProps> = ({ items, userId }) => {
           sx={{ display: { xs: "none", sm: "block" } }}
           className={styles.linkContainer}
         >
-          {items.map((item: HeaderItem, idx: number) => {
-            return (
-              <Link key={idx} to={item.link} className={styles.link}>
-                <Button color="inherit">{item.label}</Button>
-              </Link>
-            );
-          })}
+          {items.map((item: HeaderItem) => (
+            <Link key={item.label} to={item.link} className={styles.link}>
+              <Button color="inherit">{item.label}</Button>
+            </Link>
+          ))}
           {userId && (
             <Box className={styles.link}>
-              <Button color="inherit" onClick={() => handleLogout()}>
-                Logout
-              </Button>
+              <IconButton onClick={handleOpenMenu}>
+                <AccountCircleIcon />
+              </IconButton>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={() => handleRedirect("/profile")}>
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
             </Box>
           )}
         </Box>

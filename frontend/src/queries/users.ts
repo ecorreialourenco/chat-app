@@ -9,7 +9,7 @@ export const GET_USER = gql`
         total
         chat {
           id
-          username
+          userName
           messages {
             id
             message

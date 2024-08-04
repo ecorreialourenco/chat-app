@@ -1,0 +1,40 @@
+.wrapper {
+  height: calc(100vh - 100px);
+  position: relative;
+}
+
+.chatContainer {
+  height: 88%;
+  overflow: scroll;
+  display: block;
+}
+
+.inputContainer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.message {
+  width: 70%;
+  margin: 5px 0px;
+  padding: 10px 14px;
+  border-radius: 20px;
+
+  &.receiveMessage {
+    background-color: cyan;
+  }
+
+  &.sendMessage {
+    background-color: lime;
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+}

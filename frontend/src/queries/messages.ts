@@ -1,45 +1,58 @@
 import { gql } from "@apollo/client";
 
-export const GET_USER_MESSAGES = gql`
-  query getMessages($sentBy: String, $sentTo: String) {
-    getMessages(sentBy: $sentBy, sentTo: $sentTo) {
-      id
-      message
-      sentBy {
+export const LIST_USER_GROUPS = gql`
+  query listGroups($offset: Int, $limit: Int) {
+    listGroups(filters: { offset: $offset, limit: $limit }) {
+      group {
         id
+        name
+        users {
+          id
+        }
       }
-      sentTo {
-        id
-      }
+      total
     }
   }
 `;
 
-export const GET_MESSAGES = gql`
-  query listMessages($sentBy: String, $sentTo: String) {
-    listMessages(sentBy: $sentBy, sentTo: $sentTo) {
+export const GET_USER_GROUP = gql`
+  query getGroup($id: Int!) {
+    getGroup(id: $id) {
       id
-      message
-      sentBy {
+      name
+      users {
         id
         username
       }
-      sentTo {
-        id
-        username
+      messageList(filters: {}) {
+        messages {
+          id
+          message
+          userId
+          user {
+            id
+            username
+          }
+          createdAt
+          updatedAt
+        }
       }
-      status
-      date
     }
   }
 `;
 
 export const SEND_MESSAGES = gql`
-  mutation sendMessage($message: String, $sentBy: String, $sentTo: String) {
-    sendMessage(message: $message, sentBy: $sentBy, sentTo: $sentTo) {
+  mutation sendMessage($groupId: Int!, $message: String!) {
+    handleMessage(message: { groupId: $groupId, message: $message }) {
       id
       message
-      date
+      userId
+      user {
+        id
+        username
+      }
+      createdAt
+      updatedAt
     }
   }
 `;

@@ -6,7 +6,7 @@ interface InputProps {
   value: string;
   label: string;
   name?: string;
-  onChange: (val: string, name?: string) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   multiline?: boolean;
   rows?: number;
@@ -15,6 +15,7 @@ interface InputProps {
 export const Input: FC<InputProps> = ({
   value,
   label,
+  name,
   onChange,
   required,
   multiline,
@@ -22,13 +23,12 @@ export const Input: FC<InputProps> = ({
 }) => (
   <TextField
     label={label}
+    name={name}
     variant="outlined"
     required={required}
     className={styles.input}
     value={value}
-    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-      onChange(e.target.value, e.target.name)
-    }
+    onChange={onChange}
     margin="normal"
     multiline={multiline}
     rows={(multiline && rows) || 1}
