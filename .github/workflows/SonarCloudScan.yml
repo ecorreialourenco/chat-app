@@ -6,19 +6,40 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  sonarcloud-backend:
+    name: SonarCloud-backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
       - name: Install dependencies
         run: yarn
+        working-directory: ./backend
       - name: Test and coverage
         run: yarn jest --coverage
+        working-directory: ./backend
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+
+  sonarcloud-frontend:
+    name: SonarCloud-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: yarn
+        working-directory: ./frontend
+      - name: Test and coverage
+        run: yarn jest --coverage
+        working-directory: ./frontend
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
