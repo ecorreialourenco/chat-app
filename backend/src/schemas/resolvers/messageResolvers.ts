@@ -118,7 +118,6 @@ const resolvers = {
           payload.newMessage.message.sentTo === variables.sentTo
       ),
     },
-    /* TODO: Not in use yet */
     readMessage: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(["MESSAGE_READ"]),
